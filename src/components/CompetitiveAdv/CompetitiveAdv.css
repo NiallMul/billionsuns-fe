@@ -1,0 +1,14 @@
+#comp-adv-tb table, th, td{
+    border: 1px solid black;
+}
+
+#comp-btn{
+    border: 1px solid black;
+}
+.MuiDialog-paperWidthSm {
+    max-width: 800px!important;
+}
+.selectedRow {
+    background-color: aqua!important;
+
+}
