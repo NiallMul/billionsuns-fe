@@ -1,7 +1,7 @@
 import './CompetitiveAdv.css';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import React, {useState} from 'react';
+import React from 'react';
 import {Button, DialogActions, DialogContent} from "@material-ui/core";
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';

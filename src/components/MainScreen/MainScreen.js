@@ -10,7 +10,8 @@ class MainScreen extends Component {
         super(props);
         this.state = {
             competitiveAdvantages: [],
-            selectedAdvantage: ""
+            selectedAdvantage: "",
+            advantage: []
         };
         this.selectedAdvantage = this.selectedAdvantage.bind(this);
     }
@@ -23,18 +24,26 @@ class MainScreen extends Component {
             });
     }
 
-    selectedAdvantage(selected) {
+    async selectedAdvantage(selected) {
         this.setState({selectedAdvantage: selected ? selected : "no advantage selected"});
+
+        await fetch(`http://localhost:8080/compadv/getadv?id=${selected}`, {method: 'GET'})
+            .then(promise => promise.json())
+            .then(data => {
+                this.setState({advantage: data})
+            });
+        console.log(`selected value: ${this.state.advantage.name}`);
     }
 
     render() {
+        let sAdvantage = this.state.advantage;
         return <div className="App">
             <CorpName/>
 
             <CompetitiveAdv advantagelist={this.state.competitiveAdvantages}
                             selectedAdvantage={this.selectedAdvantage}/>
 
-            <SelectedAdvantage selectedAdvantage={this.state.selectedAdvantage}/>
+            <SelectedAdvantage selectedAdvantage={sAdvantage}/>
 
             <PostCorp/>
         </div>;
