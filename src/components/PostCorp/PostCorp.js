@@ -1,5 +1,7 @@
 function PostCorp(props) {
-   return <input type="submit" value="Save Corp"/>
+    const saveCorp = props.saveCorp;
+
+    return <input type="submit" value="Save Corp" onClick={saveCorp}/>
 }
 
 export default PostCorp;

@@ -11,9 +11,14 @@ class MainScreen extends Component {
         this.state = {
             competitiveAdvantages: [],
             selectedAdvantage: "",
-            advantage: []
+            corporation: {
+                name: "",
+                advantage: []
+            }
         };
         this.selectedAdvantage = this.selectedAdvantage.bind(this);
+        this.generateDetails = this.generateDetails.bind(this);
+        this.saveCorp = this.saveCorp.bind(this);
     }
 
     componentDidMount() {
@@ -30,22 +35,50 @@ class MainScreen extends Component {
         await fetch(`http://localhost:8080/compadv/getadv?id=${selected}`, {method: 'GET'})
             .then(promise => promise.json())
             .then(data => {
-                this.setState({advantage: data})
+                this.setState(prevState => ({
+                    corporation: {                   // object that we want to update
+                        ...prevState.corporation,    // keep all other key-value pairs
+                        advantage: data       // update the value of specific key
+                    }
+                }))
             });
-        console.log(`selected value: ${this.state.advantage.name}`);
+        console.log(`selected value: ${this.state.corporation.name}, ${this.state.corporation.advantage.name}`);
+    }
+
+    async generateDetails() {
+        await fetch(`http://localhost:8080/randomname`, {method: 'GET'})
+            .then(promise => promise.json())
+            .then(data => {
+                this.setState(prevState => ({
+                    corporation: {
+                        ...prevState.corporation,
+                        name: data.name
+                    }
+                }))
+            });
+        document.getElementById(`corp-name-input`).value = this.state.corporation.name;
+    }
+
+    async saveCorp() {
+        let corp = this.state.corporation;
+        let response = await fetch('http://localhost:8080/savecorp', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(corp)
+        }).then(data => data.json);
+        console.log(`response: ${response}`);
     }
 
     render() {
-        let sAdvantage = this.state.advantage;
         return <div className="App">
-            <CorpName/>
+            <CorpName generateDetails={this.generateDetails}/>
 
             <CompetitiveAdv advantagelist={this.state.competitiveAdvantages}
                             selectedAdvantage={this.selectedAdvantage}/>
 
-            <SelectedAdvantage selectedAdvantage={sAdvantage}/>
+            <SelectedAdvantage selectedAdvantage={this.state.corporation?.advantage}/>
 
-            <PostCorp/>
+            <PostCorp saveCorp={this.saveCorp}/>
         </div>;
     }
 }
